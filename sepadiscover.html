@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>SEPA Discovery Tool v0.1</title>
+
+    <!-- jquery -->
+    <script src="jquery-3.2.1/jquery-3.2.1.min.js"></script>
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+
+    <!-- Sepa Discover -->
+    <script type="text/javascript" src="sepadiscover.js"></script>
+    
+  </head>
+
+  <body onload="init()">
+
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">SEPAdiscover</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>SEPA Discovery Tool v0.1</h1>
+        <p class="lead">Use this tool to explore the devices in your Web of Things network.</p>
+      </div>
+
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="ws://192.168.1.100:9000/subscribe" aria-describedby="basic-addon1" id="subscribeURI"/>
+      <span class="input-group-addon" id="subscribeURIlabel">Subscribe URI</span>
+    </div>
+    <br/>
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="http://192.168.1.100:8000/update" aria-describedby="basic-addon1" id="updateURI"/>
+      <span class="input-group-addon" id="updateURIlabel">Update URI</span>
+    </div>
+    <br/>
+    <div class="btn-toolbar" role="toolbar" aria-label="Button toolbar">
+      <div class="btn-group" role="group" aria-label="Basic example">
+	<button type="button" class="btn btn-secondary" onclick="javascript:subscribeToDevices('things');" id="sub1button">Things</button>
+	<button type="button" class="btn btn-secondary" onclick="javascript:subscribeToDevices('sensors');" id="sub2button">Sensors</button>
+	<button type="button" class="btn btn-secondary" onclick="javascript:subscribeToDevices('actuators');" id="sub3button">Actuators</button>
+      </div>
+      <div class="btn-group" role="group" aria-label="Basic example">
+	<button type="button" class="btn btn-secondary" onclick="javascript:unsubscribe();">Unsubscribe</button>
+      </div>
+      <div class="btn-group" role="group" aria-label="Basic example">
+	<button type="button" class="btn btn-secondary" onclick="javascript:clearData();">Clear</button>
+      </div>
+    </div>
+    
+    <br/><br/>
+
+    <!-- DEVICE LIST -->
+    <div class="panel panel-default" id="devicesPanel">
+      <div class="panel-heading">
+	Things
+      </div>
+      <table class="table" id="deviceTable">
+	<th>Device</th><th>Name</th><th>Status</th>
+      </table>
+      <div class="panel-footer" id="spuid">	
+      </div>
+    </div>
+    <br/>
+
+    <!-- DEVICE PROPERTIES MONITOR -->
+    <div class="panel panel-default" id="devicePropPanel">
+      <div class="panel-heading">
+	Properties
+      </div>
+      <table class="table" id="devicePropTable">
+	<tr><th>Thing</th><th>Property</th><th>Name</th><th>Value</th></tr>
+      </table>
+      <div class="panel-footer" id="devicePropertiesSpuid"></div>
+    </div>
+    <br/>
+
+    <!-- DEVICE EVENTS MONITOR -->
+    <div class="panel panel-default" id="deviceEventsPanel">
+      <div class="panel-heading">
+	Events</div>
+      <table class="table" id="deviceEventsTable">
+	<tr><th>Thing</th><th>Event</th><th>Timestamp</th><th>Value</th></tr>
+      </table>
+      <div class="panel-footer" id="deviceEventsSpuid"></div>
+    </div>
+    <br/>
+    
+    <!-- DEVICE ACTIONS -->
+    <div class="panel panel-default" id="deviceActionsPanel">
+      <div class="panel-heading">
+	Actions
+      </div>
+      <table class="table" id="deviceActionsTable">
+	<tr><th>Thing</th><th>Action</th><th>Name</th><th>Input</th><th>Invoke</th></tr>
+      </table>
+      <div class="panel-footer" id="deviceActionsSpuid"></div>
+    </div>
+    <br/>
+
+    </div> <!-- end of container -->
+    
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">Released by Web of Things Research (ARCES, University of Bologna) under GPLv3 License</p>
+      </div>
+    </footer>
+
+    
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
+  </body>
+</html>
