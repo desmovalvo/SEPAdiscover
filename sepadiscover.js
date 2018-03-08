@@ -786,6 +786,8 @@ function emptyPanelHeadFoot(req){
 
 function invokeAction(thingId, actionId){
 
+    console.log("INVOKED ACTION: " + actionId + " OF THING: " + thingId);
+    
     // read the URI to send SPARQL update
     updateURI = document.getElementById("updateURI").value;
 
@@ -800,25 +802,28 @@ function invokeAction(thingId, actionId){
 	"PREFIX td:<http://wot.arces.unibo.it/ontology/web_of_things#> "+
 	"DELETE { <" + actionId + "> wot:hasInstance ?oldInstance . " +
 	"?oldInstance rdf:type wot:ActionInstance . " +
-	"?oldInstance wot:hasTimeStamp ?aOldTimeStamp . " +
-	"?oldInstance td:hasInput ?oldInput . " +
+	"?oldInstance wot:hasReqeustTimeStamp ?aOldTimeStamp . " +
+	"?oldInstance wot:hasInputData ?oldInput . " +
 	"?oldInput dul:hasDataValue ?oldValue } " +
-	"INSERT { <" + actionId + "> wot:hasInstance ?newInstance . " +
+
+    "INSERT { <" + actionId + "> wot:hasActionInstance ?newInstance . " +
 	"?newInstance rdf:type wot:ActionInstance . " +
-	"?newInstance wot:hasTimeStamp ?time . " +
-	"?newInstance td:hasInput ?newInput . " +
+	"?newInstance wot:hasRequestTimeStamp ?time . " +
+	"?newInstance wot:hasInputData ?newInput . " +
 	"?newInput dul:hasDataValue '" + actionInput + "' } " +
-	"WHERE { <" + actionId + "> rdf:type td:Action . " +
-	"<" + thingId + "> td:hasAction ?action . " +
-	"<" + thingId + "> wot:isDiscoverable 'true' . " +
+
+    "WHERE { <" + actionId + "> rdf:type td:Action . " +
+	"<" + thingId + "> td:hasAction <" + actionId + "> . " +
 	"BIND(now() AS ?time) . " +
 	"BIND(IRI(concat('http://wot.arces.unibo.it/sepa#Action_',STRUUID())) AS ?newInstance) . " +
 	"BIND(IRI(concat('http://wot.arces.unibo.it/sepa#ActionInput_',STRUUID())) AS ?newInput) . " +
 	"OPTIONAL{ <" + actionId + "> wot:hasInstance ?oldInstance. " +
 	"?oldInstance rdf:type wot:ActionInstance. " +
-	"?oldInstance wot:hasTimeStamp ?aOldTimeStamp . " +
-	"?oldInstance td:hasInput ?oldInput . " +
+	"?oldInstance wot:hasRequestTimeStamp ?aOldTimeStamp . " +
+	"?oldInstance wot:hasInputData ?oldInput . " +
 	"?oldInput dul:hasDataValue ?oldValue}}";
+
+    console.log(su);
     
     // send the sparql update
     var req = $.ajax({
@@ -829,12 +834,14 @@ function invokeAction(thingId, actionId){
 	data: su,	
 	error: function(event){
 	    d = new Date();
-	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
+	    ts = new Intl.DateTimeFormat('en-GB').format(d);
+//	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
 	    return false;
 	},
 	success: function(data){
 	    d = new Date();
-	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
+	    ts = new Intl.DateTimeFormat('en-GB').format(d)
+	    // ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S"); 
 	}
     });
     
