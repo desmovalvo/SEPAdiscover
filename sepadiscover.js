@@ -15,17 +15,16 @@ wot = "http://wot.arces.unibo.it/sepa#";
 subText = {};
 subText["things"] = "PREFIX wot:<http://wot.arces.unibo.it/sepa#> " +
     "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
-    "PREFIX td:<http://www.w3.org/ns/td#> "+
-    "SELECT ?thingUri ?thingName ?thingStatus " +
+    "PREFIX td:<http://wot.arces.unibo.it/ontology/web_of_things#> "+
+    "SELECT ?thingUri ?thingName " +
     "WHERE { " +
     "?thingUri rdf:type td:Thing . " +
     "?thingUri td:hasName ?thingName . " +
-    "?thingUri wot:isDiscoverable ?thingStatus " +
     "}";
 
 subText["sensors"] = "PREFIX wot:<http://wot.arces.unibo.it/sepa#> " +
     "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
-    "PREFIX td:<http://www.w3.org/ns/td#> "+
+    "PREFIX td:<http://wot.arces.unibo.it/ontology/web_of_things#> "+
     "SELECT ?thingUri ?thingName ?thingStatus " +
     "WHERE { " +
     "?thingUri rdf:type td:Thing . " +
@@ -36,7 +35,7 @@ subText["sensors"] = "PREFIX wot:<http://wot.arces.unibo.it/sepa#> " +
 
 subText["actuators"] = "PREFIX wot:<http://wot.arces.unibo.it/sepa#> " +
     "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
-    "PREFIX td:<http://www.w3.org/ns/td#> "+
+    "PREFIX td:<http://wot.arces.unibo.it/ontology/web_of_things#> "+
     "SELECT ?thingUri ?thingName ?thingStatus " +
     "WHERE { " +
     "?thingUri rdf:type td:Thing . " +
@@ -45,9 +44,9 @@ subText["actuators"] = "PREFIX wot:<http://wot.arces.unibo.it/sepa#> " +
     "?thingUri wot:isDiscoverable ?thingStatus " +
     "}";
 
-subText["thingsProperties"] = "PREFIX wot:<http://wot.arces.unibo.it/wot#> " +
+subText["thingsProperties"] = "PREFIX wot:<http://wot.arces.unibo.it/sepa#> " +
     "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
-    "PREFIX td:<http://www.w3.org/ns/td#> " +
+    "PREFIX td:<http://wot.arces.unibo.it/ontology/web_of_things#> " +
     "PREFIX dul:<http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> " +
     "SELECT ?thing ?property ?propertyName ?propertyValue " +
     "WHERE { " +
@@ -57,9 +56,9 @@ subText["thingsProperties"] = "PREFIX wot:<http://wot.arces.unibo.it/wot#> " +
     "?property dul:hasDataValue ?propertyValue " +
     "}";
 
-subText["thingsActions"] = "PREFIX wot:<http://wot.arces.unibo.it/wot#> " +
+subText["thingsActions"] = "PREFIX wot:<http://wot.arces.unibo.it/sepa#> " +
     "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
-    "PREFIX td:<http://www.w3.org/ns/td#> " +
+    "PREFIX td:<http://wot.arces.unibo.it/ontology/web_of_things#> " +
     "PREFIX dul:<http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> " +
     "SELECT ?thing ?action ?actionName " +
     "WHERE { " +
@@ -70,7 +69,7 @@ subText["thingsActions"] = "PREFIX wot:<http://wot.arces.unibo.it/wot#> " +
 
 subText["thingsEvents"] = "PREFIX wot:<http://wot.arces.unibo.it/sepa#> " +
     "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
-    "PREFIX td:<http://www.w3.org/ns/td#> " +
+    "PREFIX td:<http://wot.arces.unibo.it/ontology/web_of_things#> " +
     "PREFIX dul:<http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> " +
     "SELECT ?thing ?event ?eventName ?instance ?timestamp ?value " +
     "WHERE { " +
@@ -196,7 +195,6 @@ function subscribeToDevices(subType){
 		// iterate over columns
 		thingUri = msg["firstResults"]["results"]["bindings"][i]["thingUri"]["value"];
 		thingName = msg["firstResults"]["results"]["bindings"][i]["thingName"]["value"];
-		thingStatus = msg["firstResults"]["results"]["bindings"][i]["thingStatus"]["value"];
 
 		// get the table and check if it's a new device
 		var table = document.getElementById("deviceTable");
@@ -204,20 +202,13 @@ function subscribeToDevices(subType){
 
 		    // determine id for html elements
 		    htmlThingId = thingUri.split("#")[1];
-		    htmlThingStatus = thingUri.split("#")[1] + "_status";
 		    
 		    var row = table.insertRow(-1);
 		    row.id = thingUri;		
 		    var f1 = row.insertCell(0);
 		    var f2 = row.insertCell(1);
-		    var f3 = row.insertCell(2);		    
 		    f1.innerHTML = thingUri.replace(wot, "wot:");
 		    f2.innerHTML = thingName;
-		    if (thingStatus === "true"){
-			f3.innerHTML = '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>';
-		    } else {
-			f3.innerHTML = '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-		    };
 		}
             }
 
@@ -228,7 +219,7 @@ function subscribeToDevices(subType){
 	    for (var i in msg["results"]["removedresults"]["bindings"]){
 
 		// iterate over columns
-		thingUri = msg["results"]["addedresults"]["bindings"][i]["thingUri"]["value"];
+		thingUri = msg["results"]["removedresults"]["bindings"][i]["thingUri"]["value"];
 
 		// get the table and check if it's a new device
 		var table = document.getElementById("deviceTable");
@@ -244,7 +235,6 @@ function subscribeToDevices(subType){
 		// iterate over columns
 		thingUri = msg["results"]["addedresults"]["bindings"][i]["thingUri"]["value"];
 		thingName = msg["results"]["addedresults"]["bindings"][i]["thingName"]["value"];
-		thingStatus = msg["results"]["addedresults"]["bindings"][i]["thingStatus"]["value"];
 
 		// get the table and check if it's a new device
 		var table = document.getElementById("deviceTable");
@@ -252,34 +242,15 @@ function subscribeToDevices(subType){
 
 		    // determine id for html elements
 		    htmlThingId = thingUri.split("#")[1];
-		    htmlThingStatus = thingUri.split("#")[1] + "_status";
 		    
 		    var row = table.insertRow(-1);
 		    row.id = thingUri;		
 		    var f1 = row.insertCell(0);
 		    var f2 = row.insertCell(1);
-		    var f3 = row.insertCell(2);		    
 		    f1.innerHTML = thingUri.replace(wot, "wot:");
 		    f2.innerHTML = thingName;
-		    if (thingStatus === "true"){
-			f3.innerHTML = '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>';
-		    } else {
-			f3.innerHTML = '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-		    };
 		}
-
-		// else {
-
-		//     // determine id for html elements
-		//     htmlThingId = thingUri.split("#")[1];
-		//     htmlThingStatus = thingUri.split("#")[1] + "_status";	    
-		//     if (thingStatus === "true"){
-		// 	document.getElementById(htmlThingStatus).innerHTML = '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>';
-		//     } else {
-		// 	document.getElementById(htmlThingStatus).innerHTML = '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-		//     }
 		
-		// }		
 	    }
 	}
 	
@@ -524,13 +495,16 @@ function subscribeToDevices(subType){
 
     	    if (emsg["spuid"] === deviceEventsSpuid){
 
-		// // iterate over rows of the removed results
-		// for (var i in emsg["results"]["removedresults"]["bindings"]){
-		//     if (document.getElementById(eUri.split("#")[1] + tUri.split("#")[1])){
-		// 	document.getElementById(eUri.split("#")[1] + tUri.split("#")[1]).remove();
-		//     }
-		// };
-		
+		// iterate over columns
+		for (var i in emsg["results"]["removedresults"]["bindings"]){		    
+		    eUri = emsg["results"]["removedresults"]["bindings"][i]["event"]["value"].split("#")[1] + tUri.split("#")[1];
+		    
+		    // get the table and check if it's a new device
+		    if (document.getElementById(eUri)){
+			document.getElementById(eUri).remove();
+		    }
+		}
+				
     		// iterate over rows of the results
     		for (var i in emsg["results"]["addedresults"]["bindings"]){
 		    
@@ -601,6 +575,7 @@ function subscribeToDevices(subType){
 	
     	// parse the message
     	msg = JSON.parse(event.data);
+	console.log(msg);
 
     	// store the subscription ID
     	if (msg["subscribed"] !== undefined){
@@ -681,6 +656,16 @@ function subscribeToDevices(subType){
     		    }
     		}
     	    }
+
+	    
+    	    // iterate over rows of the results
+    	    for (var i in msg["results"]["removedresults"]["bindings"]){
+		aUri = msg["results"]["removedresults"]["bindings"][i]["action"]["value"];
+		if (document.getElementById(aUri)){
+		    document.getElementById(aUri).remove();
+		}
+    	    }
+	    
     	}	
     };
 
@@ -812,7 +797,7 @@ function invokeAction(thingId, actionId){
     su = "PREFIX wot:<http://wot.arces.unibo.it/sepa#> " +
 	"PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
 	"PREFIX dul:<http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> " + 
-	"PREFIX td:<http://www.w3.org/ns/td#> "+
+	"PREFIX td:<http://wot.arces.unibo.it/ontology/web_of_things#> "+
 	"DELETE { <" + actionId + "> wot:hasInstance ?oldInstance . " +
 	"?oldInstance rdf:type wot:ActionInstance . " +
 	"?oldInstance wot:hasTimeStamp ?aOldTimeStamp . " +

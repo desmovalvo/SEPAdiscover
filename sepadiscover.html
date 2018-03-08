@@ -53,20 +53,18 @@
       </div>
 
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="ws://192.168.1.100:9000/subscribe" aria-describedby="basic-addon1" id="subscribeURI"/>
+      <input type="text" class="form-control" value="ws://localhost:9000/subscribe" aria-describedby="basic-addon1" id="subscribeURI"/>
       <span class="input-group-addon" id="subscribeURIlabel">Subscribe URI</span>
     </div>
     <br/>
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="http://192.168.1.100:8000/update" aria-describedby="basic-addon1" id="updateURI"/>
+      <input type="text" class="form-control" value="http://localhost:8000/update" aria-describedby="basic-addon1" id="updateURI"/>
       <span class="input-group-addon" id="updateURIlabel">Update URI</span>
     </div>
     <br/>
     <div class="btn-toolbar" role="toolbar" aria-label="Button toolbar">
       <div class="btn-group" role="group" aria-label="Basic example">
-	<button type="button" class="btn btn-secondary" onclick="javascript:subscribeToDevices('things');" id="sub1button">Things</button>
-	<button type="button" class="btn btn-secondary" onclick="javascript:subscribeToDevices('sensors');" id="sub2button">Sensors</button>
-	<button type="button" class="btn btn-secondary" onclick="javascript:subscribeToDevices('actuators');" id="sub3button">Actuators</button>
+	<button type="button" class="btn btn-secondary" onclick="javascript:subscribeToDevices('things');" id="sub1button">Subscribe</button>
       </div>
       <div class="btn-group" role="group" aria-label="Basic example">
 	<button type="button" class="btn btn-secondary" onclick="javascript:unsubscribe();">Unsubscribe</button>
@@ -84,7 +82,7 @@
 	Things
       </div>
       <table class="table" id="deviceTable">
-	<th>Device</th><th>Name</th><th>Status</th>
+	<th>Device</th><th>Name</th>
       </table>
       <div class="panel-footer" id="spuid">	
       </div>
